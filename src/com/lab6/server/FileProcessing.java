@@ -1,5 +1,7 @@
 package com.lab6.server;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lab6.server.entities.MusicBand;
 
 import java.io.ByteArrayOutputStream;
