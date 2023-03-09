@@ -54,4 +54,8 @@ public class CollectionManagement {
         return collection;
     }
 
+    public long getInitialisationDate() {
+        return initialisationDate;
+    }
+
 }
