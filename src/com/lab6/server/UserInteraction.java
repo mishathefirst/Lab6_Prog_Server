@@ -23,7 +23,7 @@ public class UserInteraction {
         }
 
         System.out.println("Setting connection with the client...");
-        //Set the connection with the client here
+
 
 
     }

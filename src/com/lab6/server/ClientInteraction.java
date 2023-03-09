@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class ClientInteraction {
 
@@ -20,13 +21,25 @@ public class ClientInteraction {
             byteBuffer.clear();
             byte[] dataBytes = new byte[50];
 
+
+
             while (true) {
                 SocketChannel socketChannel = serverSocketChannel.accept();
+
                 if (socketChannel != null) {
-                    System.out.println(socketChannel.read(byteBuffer));
-                    byteBuffer.put(dataBytes);
+                    socketChannel.read(byteBuffer);
+
+                    for (int i = 0; i < byteBuffer.limit(); i++) {
+                        dataBytes[i] = byteBuffer.get(i);
+                    }
                     System.out.println(new String(dataBytes, StandardCharsets.UTF_8));
+                    Arrays.fill(dataBytes, (byte) 0);
                     byteBuffer.clear();
+                    for (int i = 0; i < byteBuffer.limit(); i++) {
+                        byteBuffer.put((byte) 0);
+                    }
+                    byteBuffer.position(0);
+
                 }
             }
 
