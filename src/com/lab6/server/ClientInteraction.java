@@ -1,6 +1,9 @@
 package com.lab6.server;
 
+import com.google.gson.Gson;
 import com.lab6.server.entities.CollectionData;
+import com.lab6.server.entities.MusicBand;
+import com.lab6.server.entities.ResponseObject;
 import com.lab6.server.entities.StartingObject;
 
 import java.io.IOException;
@@ -17,6 +20,7 @@ public class ClientInteraction {
     private final UserInteraction userInteraction = new UserInteraction();
     private final StartingObject start = userInteraction.start();
     private final FileProcessing fileProcessing = new FileProcessing();
+    private final Gson gson = new Gson();
 
     public void start() {
 
@@ -65,27 +69,36 @@ public class ClientInteraction {
     }
 
 
-    private void executeCommand(String command, StartingObject start) {
-
+    private ResponseObject executeCommand(String command, StartingObject start) {
         if (command.equals("clear")) {
-            int response = clearCollection(start);
+            return clearCollection(start);
         } else if (command.equals("info")) {
-            CollectionData response = collectionInfo(start);
-        } else if() {
-
+             return collectionInfo(start);
+        } else if (command.startsWith("add")) {
+            return addObject(command, start);
+        } else {
+            return new ResponseObject(command, "Command not found", 400);
         }
     }
 
 
-    private int clearCollection(StartingObject start) {
+    private ResponseObject clearCollection(StartingObject start) {
         collectionManagement.clear();
         fileProcessing.writeCollectionIntoFile(start.getCollection(), start.getFileName());
-        return 200;
+        return new ResponseObject("clear", "", 200);
     }
 
-    private CollectionData collectionInfo(StartingObject start) {
-        return new CollectionData(start.getCollection().getClass().getName(), collectionManagement.getInitialisationDate(),
-                start.getCollection().size(), start.getCollection().isEmpty());
+    private ResponseObject collectionInfo(StartingObject start) {
+        return new ResponseObject("info", gson.toJson(new CollectionData(start.getCollection().getClass().getName(), collectionManagement.getInitialisationDate(),
+                start.getCollection().size(), start.getCollection().isEmpty())), 200);
+    }
+
+    private ResponseObject addObject(String command, StartingObject start) {
+        String objectString = command.substring(4, command.length() - 1);
+        collectionManagement.add(gson.fromJson(objectString, MusicBand.class));
+        //start.getCollection().add(gson.fromJson(objectString, MusicBand.class));
+        fileProcessing.writeCollectionIntoFile(start.getCollection(), start.getFileName());
+        return new ResponseObject("add", "", 200);
     }
 
 }

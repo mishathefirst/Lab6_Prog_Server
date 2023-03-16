@@ -29,4 +29,12 @@ public class ResponseObject {
     public int getResponseCode() {
         return responseCode;
     }
+
+    public ResponseObject() {}
+
+    public ResponseObject(String command, String parameters, int responseCode) {
+        this.command = command;
+        this.parameters = parameters;
+        this.responseCode = responseCode;
+    }
 }
