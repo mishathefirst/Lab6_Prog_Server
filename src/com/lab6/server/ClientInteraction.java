@@ -71,6 +71,8 @@ public class ClientInteraction {
             int response = clearCollection(start);
         } else if (command.equals("info")) {
             CollectionData response = collectionInfo(start);
+        } else if() {
+
         }
     }
 
